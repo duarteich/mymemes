@@ -14,6 +14,7 @@
 		A80530E52195FD1E0080FB0E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A80530E32195FD1E0080FB0E /* LaunchScreen.storyboard */; };
 		A80530F02195FD1E0080FB0E /* Mis_MemesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80530EF2195FD1E0080FB0E /* Mis_MemesTests.swift */; };
 		A80530FB2195FD1E0080FB0E /* Mis_MemesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80530FA2195FD1E0080FB0E /* Mis_MemesUITests.swift */; };
+		A8BFB399219A29060069549F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BFB398219A29060069549F /* Meme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		A80530F62195FD1E0080FB0E /* Mis MemesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mis MemesUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A80530FA2195FD1E0080FB0E /* Mis_MemesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mis_MemesUITests.swift; sourceTree = "<group>"; };
 		A80530FC2195FD1E0080FB0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A8BFB398219A29060069549F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				A80530E12195FD1E0080FB0E /* Assets.xcassets */,
 				A80530E32195FD1E0080FB0E /* LaunchScreen.storyboard */,
 				A80530E62195FD1E0080FB0E /* Info.plist */,
+				A8BFB398219A29060069549F /* Meme.swift */,
 			);
 			path = "Mis Memes";
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8BFB399219A29060069549F /* Meme.swift in Sources */,
 				A80530DD2195FD1C0080FB0E /* ViewController.swift in Sources */,
 				A80530DB2195FD1C0080FB0E /* AppDelegate.swift in Sources */,
 			);
