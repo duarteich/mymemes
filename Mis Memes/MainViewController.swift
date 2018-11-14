@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     fileprivate let itemsPerRow: CGFloat = 4
     fileprivate let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
@@ -33,6 +33,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         loadMemes()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadMemes()
+    }
+    
     private func loadMemes() {
         if let data = UserDefaults.standard.value(forKey:"memes") as? Data {
             guard let memes = try? PropertyListDecoder().decode(Array<Meme>.self, from: data) else { return }
@@ -47,7 +52,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             let meme = Meme(name: "Meme 1", imageName: "meme_1")
             memes.append(meme)
             UserDefaults.standard.set(try? PropertyListEncoder().encode(memes), forKey:"memes")
-            loadMemes()
+            let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
+            controller.image = pickedImage
+            navigationController?.pushViewController(controller, animated: true)
         }
         dismiss(animated: true, completion: nil)
     }

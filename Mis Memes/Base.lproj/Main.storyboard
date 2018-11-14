@@ -13,7 +13,7 @@
         <!--Mis memes-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Mis_Memes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="Mis_Memes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -63,6 +63,47 @@
             </objects>
             <point key="canvasLocation" x="536.79999999999995" y="-546.47676161919048"/>
         </scene>
+        <!--Meme Details View Controller-->
+        <scene sceneID="QWb-gU-hzb">
+            <objects>
+                <viewController storyboardIdentifier="memeDetailsViewController" id="eXg-wR-k0M" customClass="MemeDetailsViewController" customModule="Mis_Memes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="R3g-Gl-3M9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre del meme" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-IO-CUp">
+                                <rect key="frame" x="8" y="36" width="359" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
+                                <rect key="frame" x="8" y="82" width="359" height="300"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="8wQ-bE-EFC"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="eW9-rX-ywN" firstAttribute="trailing" secondItem="2Ef-rf-wad" secondAttribute="trailing" constant="8" id="OJg-7a-bEQ"/>
+                            <constraint firstItem="eW9-rX-ywN" firstAttribute="trailing" secondItem="0Ak-IO-CUp" secondAttribute="trailing" constant="8" id="SSC-Xr-Yj3"/>
+                            <constraint firstItem="2Ef-rf-wad" firstAttribute="top" secondItem="0Ak-IO-CUp" secondAttribute="bottom" constant="16" id="Vim-QB-4TK"/>
+                            <constraint firstItem="0Ak-IO-CUp" firstAttribute="leading" secondItem="eW9-rX-ywN" secondAttribute="leading" constant="8" id="Zjo-1e-Fsy"/>
+                            <constraint firstItem="0Ak-IO-CUp" firstAttribute="top" secondItem="eW9-rX-ywN" secondAttribute="top" constant="16" id="kba-4f-HOr"/>
+                            <constraint firstItem="2Ef-rf-wad" firstAttribute="leading" secondItem="eW9-rX-ywN" secondAttribute="leading" constant="8" id="wsW-G1-teA"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="eW9-rX-ywN"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="2Ef-rf-wad" id="YqZ-Ip-T9Y"/>
+                        <outlet property="nameTextField" destination="0Ak-IO-CUp" id="Fdi-Ev-m6V"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8z2-r2-xMc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1319.2" y="-546.47676161919048"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="nlV-ef-OYb">
             <objects>
@@ -79,7 +120,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RE3-4M-fPN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="-564.46776611694156"/>
+            <point key="canvasLocation" x="-281" y="-578"/>
         </scene>
     </scenes>
 </document>
