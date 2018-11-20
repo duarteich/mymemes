@@ -28,13 +28,27 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="memeCell" id="gVa-TS-c4b">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="memeCell" id="gVa-TS-c4b" customClass="MemeCell" customModule="Mis_Memes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1rS-4S-5Id">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
+                                            </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="1rS-4S-5Id" secondAttribute="trailing" id="Naa-gZ-Vku"/>
+                                            <constraint firstItem="1rS-4S-5Id" firstAttribute="top" secondItem="gVa-TS-c4b" secondAttribute="top" id="h50-aD-Kbu"/>
+                                            <constraint firstAttribute="bottom" secondItem="1rS-4S-5Id" secondAttribute="bottom" id="hQZ-cl-v6t"/>
+                                            <constraint firstItem="1rS-4S-5Id" firstAttribute="leading" secondItem="gVa-TS-c4b" secondAttribute="leading" id="vzS-3p-8WB"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="imageView" destination="1rS-4S-5Id" id="sbH-9W-4q8"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -48,13 +62,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Mis memes" id="lYd-3r-4YM">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="JjZ-MT-5sc">
-                            <connections>
-                                <action selector="addMeme:" destination="BYZ-38-t0r" id="Zp1-hl-g8m"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Mis memes" id="lYd-3r-4YM"/>
                     <connections>
                         <outlet property="collectionView" destination="mpX-aV-Pvj" id="Gsw-ok-z8V"/>
                     </connections>
@@ -75,7 +83,7 @@
                                 <rect key="frame" x="8" y="36" width="359" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
                                 <rect key="frame" x="8" y="82" width="359" height="300"/>

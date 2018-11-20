@@ -15,6 +15,7 @@ class MemeDetailsViewController: UIViewController {
     
     var meme: Meme?
     var image: UIImage?
+    var delegate: MemeDetailsViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,11 +32,15 @@ class MemeDetailsViewController: UIViewController {
     }
     
     @objc func cancel() {
-        navigationController?.popViewController(animated: true)
+        delegate?.memeDetailsDidCancel()
     }
     
     @objc func save() {
-        navigationController?.popViewController(animated: true)
+        if nameTextField.text!.isEmpty {
+            showAlertDialog(message: "Por favor, introduce el nombre del meme.", title: "Error", controller: self)
+            return
+        }
+        delegate?.memeDetailsDidSave(memeDetailsViewController: self)
     }
 
 }
