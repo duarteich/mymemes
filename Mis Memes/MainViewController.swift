@@ -23,10 +23,11 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     let imagePicker = UIImagePickerController()
     fileprivate var memes = [Meme]()
-    fileprivate var selectedMemes = [Meme]()
+    fileprivate var selectedMemes = [Int]()
     
     var addItem : UIBarButtonItem?
-    let deleteItems = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: nil)
+    var leftItem: UIBarButtonItem?
+    var deleteItem: UIBarButtonItem?
     var selecting: Bool = false {
         didSet {
             collectionView?.allowsMultipleSelection = selecting
@@ -34,8 +35,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             collectionView?.selectItem(at: nil, animated: true, scrollPosition: .top)
             selectedMemes.removeAll(keepingCapacity: false)
             if selecting {
-                navigationItem.rightBarButtonItem = deleteItems
+                navigationItem.leftBarButtonItem?.title = "Cancelar"
+                navigationItem.rightBarButtonItem = deleteItem
             } else {
+                navigationItem.leftBarButtonItem?.title = "Seleccionar"
                 navigationItem.rightBarButtonItem = addItem
             }
         }
@@ -49,10 +52,12 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         imagePicker.delegate = self
         addItem = UIBarButtonItem(barButtonSystemItem: .add
         , target: self, action: #selector(addMeme))
+        deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItems))
         navigationItem.rightBarButtonItem = addItem
-        let leftItem = UIBarButtonItem(title: "Seleccionar", style: .plain, target: self, action: #selector(selectItems))
-        navigationItem.leftBarButtonItem = leftItem
-        loadMemes()
+        leftItem = UIBarButtonItem(title: "Seleccionar", style: .plain, target: self, action: #selector(selectItems))
+        if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
+            print("Documents Directory: \(documentsPath)")
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -83,18 +88,33 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     @objc func selectItems() {
-        if selecting {
-            navigationItem.leftBarButtonItem?.title = "Seleccionar"
-        } else {
-            navigationItem.leftBarButtonItem?.title = "Cancelar"
-        }
         selecting = !selecting
+    }
+    
+    @objc func deleteItems() {
+        selectedMemes.sort()
+        var counter = 0
+        for index in selectedMemes {
+            deleteImage(imageName: memes[index - counter].imageName)
+            memes.remove(at: index - counter)
+            counter += 1
+        }
+        selecting = false
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(memes), forKey:"memes")
+        loadMemes()
     }
     
     private func loadMemes() {
         if let data = UserDefaults.standard.value(forKey:"memes") as? Data {
             guard let memes = try? PropertyListDecoder().decode(Array<Meme>.self, from: data) else { return }
             self.memes = memes
+            if !memes.isEmpty {
+                navigationItem.leftBarButtonItem = leftItem
+                collectionView.restore()
+            } else {
+                navigationItem.leftBarButtonItem = nil
+                collectionView.setEmptyMessage("Aún no has agregado memes 😔\n Presiona + para comenzar")
+            }
             collectionView.reloadData()
         }
     }
@@ -119,6 +139,16 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let urlString: String = imagePath!.absoluteString
         let imageData = image.jpegData(compressionQuality: 0.8)
         fileManager.createFile(atPath: urlString as String, contents: imageData, attributes: nil)
+    }
+    
+    func deleteImage(imageName: String) {
+        let fileManager = FileManager.default
+        let url = NSURL(string: memesPath)
+        let imagePath = url?.appendingPathComponent(imageName)
+        let urlString: String = imagePath!.absoluteString
+        if fileManager.fileExists(atPath: urlString) {
+            try! fileManager.removeItem(atPath: urlString)
+        }
     }
     
     func getDirectoryPath() -> NSURL {
@@ -151,6 +181,14 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedMemes.append(indexPath.row)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        selectedMemes.remove(at: indexPath.row)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
         let availableWidth = view.frame.width - paddingSpace
@@ -161,6 +199,25 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return sectionInsets
+    }
+}
+
+extension UICollectionView {
+    
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .black
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = .center;
+        messageLabel.font = UIFont.systemFont(ofSize: 18)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel;
+    }
+    
+    func restore() {
+        self.backgroundView = nil
     }
 }
 
