@@ -16,6 +16,7 @@
 		A80530FB2195FD1E0080FB0E /* Mis_MemesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80530FA2195FD1E0080FB0E /* Mis_MemesUITests.swift */; };
 		A815BAEB21A307270060AF44 /* MemeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A815BAEA21A307270060AF44 /* MemeCell.swift */; };
 		A815BAED21A3A5D30060AF44 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A815BAEC21A3A5D30060AF44 /* Utils.swift */; };
+		A873293021B042670029CD86 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A873292F21B042670029CD86 /* StoreKit.framework */; };
 		A8BFB399219A29060069549F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BFB398219A29060069549F /* Meme.swift */; };
 		AFF32673219BDDBB00FCD913 /* MemeDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF32672219BDDBB00FCD913 /* MemeDetailsViewController.swift */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		A80530FC2195FD1E0080FB0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A815BAEA21A307270060AF44 /* MemeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeCell.swift; sourceTree = "<group>"; };
 		A815BAEC21A3A5D30060AF44 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		A873292F21B042670029CD86 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		A8BFB398219A29060069549F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meme.swift; sourceTree = "<group>"; };
 		AFF32672219BDDBB00FCD913 /* MemeDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A873293021B042670029CD86 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +92,7 @@
 				A80530EE2195FD1E0080FB0E /* Mis MemesTests */,
 				A80530F92195FD1E0080FB0E /* Mis MemesUITests */,
 				A80530D82195FD1C0080FB0E /* Products */,
+				A873292E21B042670029CD86 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +139,14 @@
 				A80530FC2195FD1E0080FB0E /* Info.plist */,
 			);
 			path = "Mis MemesUITests";
+			sourceTree = "<group>";
+		};
+		A873292E21B042670029CD86 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A873292F21B042670029CD86 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +217,11 @@
 				TargetAttributes = {
 					A80530D62195FD1C0080FB0E = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					A80530EA2195FD1E0080FB0E = {
 						CreatedOnToolsVersion = 10.1;
@@ -455,7 +472,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.makingyourapp.Mis-Memes";
+				PRODUCT_BUNDLE_IDENTIFIER = com.makingyourapp.mismemes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -473,7 +490,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.makingyourapp.Mis-Memes";
+				PRODUCT_BUNDLE_IDENTIFIER = com.makingyourapp.mismemes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

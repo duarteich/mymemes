@@ -81,15 +81,15 @@
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre del meme" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-IO-CUp">
                                 <rect key="frame" x="8" y="36" width="359" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="wcc-TB-8td"/>
+                                </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
-                                <rect key="frame" x="8" y="82" width="359" height="300"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="8wQ-bE-EFC"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
+                                <rect key="frame" x="8" y="82" width="359" height="350"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -99,6 +99,7 @@
                             <constraint firstItem="2Ef-rf-wad" firstAttribute="top" secondItem="0Ak-IO-CUp" secondAttribute="bottom" constant="16" id="Vim-QB-4TK"/>
                             <constraint firstItem="0Ak-IO-CUp" firstAttribute="leading" secondItem="eW9-rX-ywN" secondAttribute="leading" constant="8" id="Zjo-1e-Fsy"/>
                             <constraint firstItem="0Ak-IO-CUp" firstAttribute="top" secondItem="eW9-rX-ywN" secondAttribute="top" constant="16" id="kba-4f-HOr"/>
+                            <constraint firstItem="eW9-rX-ywN" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="2Ef-rf-wad" secondAttribute="bottom" constant="16" id="qb2-Lb-a6f"/>
                             <constraint firstItem="2Ef-rf-wad" firstAttribute="leading" secondItem="eW9-rX-ywN" secondAttribute="leading" constant="8" id="wsW-G1-teA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="eW9-rX-ywN"/>
@@ -131,4 +132,7 @@
             <point key="canvasLocation" x="-281" y="-578"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="defaultImage" width="350" height="350"/>
+    </resources>
 </document>

@@ -19,16 +19,24 @@ class MemeDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let leftItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+        let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
+        let shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
+        let deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteMeme))
         if let meme = meme {
             title = meme.name
+            nameTextField.isHidden = true
+            if let image = getImage(imageName: meme.imageName) {
+                self.image = image
+                imageView.image = image
+            }
+            navigationItem.rightBarButtonItems = [shareItem, deleteItem]
         } else {
-            title = "Nuevo meme"
-            imageView.image = self.image
+            title = "Nuevo Meme"
+            imageView.image = image
+            navigationItem.leftBarButtonItem = leftItem
+            navigationItem.rightBarButtonItem = saveItem
         }
-        let leftItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
-        navigationItem.leftBarButtonItem = leftItem
-        let rightItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
-        navigationItem.rightBarButtonItem = rightItem
     }
     
     @objc func cancel() {
@@ -41,6 +49,18 @@ class MemeDetailsViewController: UIViewController {
             return
         }
         delegate?.memeDetailsDidSave(memeDetailsViewController: self)
+    }
+    
+    @objc func share() {
+        guard let imageToShare = self.image else { return }
+        let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    @objc func deleteMeme() {
+        guard let meme = self.meme else { return }
+        delegate?.memeDetailsDidDelete(meme: meme)
     }
 
 }
