@@ -15,18 +15,18 @@ protocol MemeDetailsViewControllerDelegate {
     func memeDetailsDidDelete(meme: Meme)
 }
 
-class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MemeDetailsViewControllerDelegate {
+class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MemeDetailsViewControllerDelegate {
 
-    fileprivate let itemsPerRow: CGFloat = 4
-    fileprivate let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+    let itemsPerRow: CGFloat = 4
+    let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     
     @IBOutlet weak var collectionView: UICollectionView!
     
     let imagePicker = UIImagePickerController()
-    fileprivate var memes = [Meme]()
-    fileprivate var selectedMemes = [Int]()
-    fileprivate var premiumProduct: SKProduct?
-    fileprivate var isPremium: Bool = false
+    var memes = [Meme]()
+    var selectedMemes = [Int]()
+    var premiumProduct: SKProduct?
+    var isPremium: Bool = false
     
     var addItem : UIBarButtonItem?
     var leftItem: UIBarButtonItem?
@@ -61,6 +61,14 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             print("Documents Directory: \(documentsPath)")
         }
         requestProducts()
+        NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
+                                               name: .MisMemesPurchaseNotification,
+                                               object: nil)
+        SKPaymentQueue.default().add(self)
+        isPremium = UserDefaults.standard.bool(forKey: "premium")
+        if !isPremium {
+            restorePurchases()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -197,46 +205,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let url = NSURL(string: path)
         return url!
     }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return memes.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "memeCell", for: indexPath) as? MemeCell else {
-            return MemeCell()
-        }
-        if let image = getImage(imageName: memes[indexPath.row].imageName) {
-            cell.imageView.image = image
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if selecting {
-            selectedMemes.append(indexPath.row)
-            if selectedMemes.isEmpty {
-                navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
-            } else {
-                navigationItem.rightBarButtonItems = [deleteItem, shareItem] as? [UIBarButtonItem]
-            }
-        } else {
-            collectionView.deselectItem(at: indexPath, animated: false)
-            let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
-            controller.meme = memes[indexPath.row]
-            controller.delegate = self
-            navigationController?.pushViewController(controller, animated: true)
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        selectedMemes.remove(at: indexPath.row)
-        if selectedMemes.isEmpty {
-            navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
-        } else {
-            navigationItem.rightBarButtonItems = [deleteItem, shareItem] as? [UIBarButtonItem]
-        }
-    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
@@ -251,52 +219,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
 }
 
-extension MainViewController: SKProductsRequestDelegate {
-    
-    func requestProducts() {
-        let ids: Set<String> = ["premium"]
-        let productsRequest = SKProductsRequest(productIdentifiers: ids)
-        productsRequest.delegate = self
-        productsRequest.start()
-    }
-    
-    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        print("Products ready: \(response.products.count)")
-        print("Products not ready: \(response.invalidProductIdentifiers.count)")
-        self.premiumProduct = response.products.first
-    }
-    
-}
-
-extension MainViewController: SKPaymentTransactionObserver {
-    
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        for transaction in transactions {
-            switch transaction.transactionState {
-            case .purchased:
-                print("purchased")
-                SKPaymentQueue.default().finishTransaction(transaction)
-                break
-            case .failed:
-                print("failed")
-                let errorMsg: String! = transaction.error?.localizedDescription
-                showAlertDialog(message: "Ocurrió un error al completar la compra. Razón: \(errorMsg)", title: "Error", controller: self)
-                SKPaymentQueue.default().finishTransaction(transaction)
-                break
-            case .restored:
-                print("restored")
-                showAlertDialog(message: "Mis Memes Premium ha sido habilitado.", title: "Mis Memes Premium", controller: self)
-                SKPaymentQueue.default().finishTransaction(transaction)
-                break
-            case .purchasing:
-                print("purchasing")
-                break
-            case .deferred:
-                print("deferred")
-                break
-            }
-        }
-    }
+extension Notification.Name {
+    static let MisMemesPurchaseNotification = Notification.Name("MisMemesPurchaseNotification")
 }
 
 extension UICollectionView {
