@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  Mis Memes
+
+  Created by Christyan Duarte on 12/4/18.
+  Copyright © 2018 Making your app. All rights reserved.
+*/
+"appname" = "Mis Memes";
+"cancel" = "Cancelar";
+"select" = "Seleccionar";
+"delete_single_confirmation" = "¿Deseas eliminar este meme de tu colección?";
+"delete_multiple_confirmation" = "¿Deseas eliminar los memes seleccionados de tu colección?";
+"no_memes" = "Aún no has agregado memes 😔\n Presiona + para comenzar";
+"premium_message" = "Para agregar más memes, necesitas la versión Premium de Mis Memes";
+"premium_title" = "Mis Memes Premium";
+"ok" = "Aceptar";
+"buy" = "Comprar";

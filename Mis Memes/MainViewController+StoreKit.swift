@@ -21,8 +21,6 @@ extension MainViewController: SKProductsRequestDelegate {
     }
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        print("Products ready: \(response.products.count)")
-        print("Products not ready: \(response.invalidProductIdentifiers.count)")
         self.premiumProduct = response.products.first
     }
     
@@ -59,17 +57,15 @@ extension MainViewController: SKPaymentTransactionObserver {
     }
     
     private func complete(transaction: SKPaymentTransaction) {
-        print("complete...")
         deliverPurchaseNotificationFor(identifier: transaction.payment.productIdentifier)
         SKPaymentQueue.default().finishTransaction(transaction)
     }
     
     private func fail(transaction: SKPaymentTransaction) {
-        print("fail...")
         if let transactionError = transaction.error as NSError?,
             let localizedDescription = transaction.error?.localizedDescription,
             transactionError.code != SKError.paymentCancelled.rawValue {
-            print("Transaction Error: \(localizedDescription)")
+            showAlertDialog(message: localizedDescription, title: NSLocalizedString("appname", comment: ""), controller: self)
         }
         
         SKPaymentQueue.default().finishTransaction(transaction)
@@ -77,21 +73,18 @@ extension MainViewController: SKPaymentTransactionObserver {
     
     private func restore(transaction: SKPaymentTransaction) {
         guard let productIdentifier = transaction.original?.payment.productIdentifier else {
-            let alertViewController = showBuyConfirmationDialog(message: "Para agregar más memes, necesitas la versión Premium de Mis Memes", title: "Mis Memes Premium") { response  in
+            let alertViewController = showBuyConfirmationDialog(message: NSLocalizedString("premium_message", comment: ""), title: NSLocalizedString("premium_title", comment: "")) { response  in
                 if response {
-                    print("Ir a la App Store")
                     guard let product = self.premiumProduct else { return }
                     let payment = SKPayment(product: product)
                     SKPaymentQueue.default().add(payment)
                 } else {
-                    print("No gracias!")
                     return
                 }
             }
             present(alertViewController, animated: true, completion: nil)
             return
         }
-        print("restore... \(productIdentifier)")
         deliverPurchaseNotificationFor(identifier: productIdentifier)
         SKPaymentQueue.default().finishTransaction(transaction)
     }

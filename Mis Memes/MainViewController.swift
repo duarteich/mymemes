@@ -38,9 +38,9 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             collectionView?.selectItem(at: nil, animated: true, scrollPosition: .top)
             selectedMemes.removeAll(keepingCapacity: false)
             if selecting {
-                navigationItem.leftBarButtonItem?.title = "Cancelar"
+                navigationItem.leftBarButtonItem?.title = NSLocalizedString("cancel", comment: "")
             } else {
-                navigationItem.leftBarButtonItem?.title = "Seleccionar"
+                navigationItem.leftBarButtonItem?.title = NSLocalizedString("select", comment: "")
                  navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
             }
         }
@@ -56,10 +56,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItems))
         shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareItems))
         navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
-        leftItem = UIBarButtonItem(title: "Seleccionar", style: .plain, target: self, action: #selector(selectItems))
-        if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
-            print("Documents Directory: \(documentsPath)")
-        }
+        leftItem = UIBarButtonItem(title: NSLocalizedString("select", comment: ""), style: .plain, target: self, action: #selector(selectItems))
         requestProducts()
         NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
                                                name: .MisMemesPurchaseNotification,
@@ -106,7 +103,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     func memeDetailsDidDelete(meme: Meme) {
-        let alertViewController = showConfirmationDialog(message: "¿Deseas eliminar este meme de tu colección?", title: "Mis Memes") { response in
+        let alertViewController = showConfirmationDialog(message: NSLocalizedString("delete_single_confirmation", comment: ""), title: NSLocalizedString("appname", comment: "")) { response in
             if response {
                 if let index = self.memes.index(where : { $0.imageName == meme.imageName}) {
                     self.memes.remove(at: index)
@@ -123,7 +120,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     @objc func deleteItems() {
-        let alertViewController = showConfirmationDialog(message: "¿Deseas eliminar los memes seleccionados de tu colección?", title: "Mis Memes") { response in
+        let alertViewController = showConfirmationDialog(message: NSLocalizedString("delete_multiple_confirmation", comment: ""), title: NSLocalizedString("appname", comment: "")) { response in
             if response {
                 self.selectedMemes.sort()
                 var counter = 0
@@ -160,11 +157,11 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
                 collectionView.restore()
             } else {
                 navigationItem.leftBarButtonItem = nil
-                collectionView.setEmptyMessage("Aún no has agregado memes 😔\n Presiona + para comenzar")
+                collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
             }
             collectionView.reloadData()
         } else {
-            collectionView.setEmptyMessage("Aún no has agregado memes 😔\n Presiona + para comenzar")
+            collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
         }
     }
     

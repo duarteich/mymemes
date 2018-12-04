@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Mis memes-->
+        <!--My Memes-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="Mis_Memes" customModuleProvider="target" sceneMemberID="viewController">
@@ -62,7 +62,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Mis memes" id="lYd-3r-4YM"/>
+                    <navigationItem key="navigationItem" title="My Memes" id="lYd-3r-4YM"/>
                     <connections>
                         <outlet property="collectionView" destination="mpX-aV-Pvj" id="Gsw-ok-z8V"/>
                     </connections>
@@ -79,7 +79,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre del meme" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-IO-CUp">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Meme name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-IO-CUp">
                                 <rect key="frame" x="8" y="36" width="359" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="wcc-TB-8td"/>
@@ -89,7 +89,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
-                                <rect key="frame" x="8" y="82" width="359" height="350"/>
+                                <rect key="frame" x="8" y="82" width="359" height="569"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -133,6 +133,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="defaultImage" width="350" height="350"/>
+        <image name="defaultImage" width="700" height="700"/>
     </resources>
 </document>

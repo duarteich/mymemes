@@ -9,20 +9,23 @@
 import UIKit
 
 let memesPath = (NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString).appendingPathComponent("memes")
+let ok = NSLocalizedString("ok", comment: "")
+let cancel = NSLocalizedString("cancel", comment: "")
+let buy = NSLocalizedString("buy", comment: "")
 
 func showAlertDialog(message: String, title: String, controller: UIViewController) {
     let alertViewController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let action = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+    let action = UIAlertAction(title: ok, style: .default, handler: nil)
     alertViewController.addAction(action)
     controller.present(alertViewController, animated: true, completion: nil)
 }
 
 func showConfirmationDialog(message: String, title: String, completion: @escaping (_ result: Bool) -> ()) -> UIAlertController {
     let alertViewController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "Aceptar", style: .default, handler: { action in
+    let okAction = UIAlertAction(title: ok, style: .default, handler: { action in
         completion(true)
     })
-    let cancelAction = UIAlertAction(title: "Cancelar", style: .cancel, handler: { action in
+    let cancelAction = UIAlertAction(title: cancel, style: .cancel, handler: { action in
         completion(false)
     })
     alertViewController.addAction(okAction)
@@ -32,10 +35,10 @@ func showConfirmationDialog(message: String, title: String, completion: @escapin
 
 func showBuyConfirmationDialog(message: String, title: String, completion: @escaping (_ result: Bool) -> ()) -> UIAlertController {
     let alertViewController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "Comprar", style: .default, handler: { action in
+    let okAction = UIAlertAction(title: buy, style: .default, handler: { action in
         completion(true)
     })
-    let cancelAction = UIAlertAction(title: "Cancelar", style: .cancel, handler: { action in
+    let cancelAction = UIAlertAction(title: cancel, style: .cancel, handler: { action in
         completion(false)
     })
     alertViewController.addAction(okAction)

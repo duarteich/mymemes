@@ -1,0 +1,6 @@
+
+/* Class = "UITextField"; placeholder = "Nombre del meme"; ObjectID = "0Ak-IO-CUp"; */
+"0Ak-IO-CUp.placeholder" = "Meme name";
+
+/* Class = "UINavigationItem"; title = "Mis memes"; ObjectID = "lYd-3r-4YM"; */
+"lYd-3r-4YM.title" = "My Memes";
