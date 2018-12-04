@@ -34,6 +34,7 @@ extension MainViewController: SKPaymentTransactionObserver {
         let productID = notification.object as? String
         if let productID = productID, productID == "premium" {
             isPremium = true
+            selectImage()
         }
     }
     
@@ -75,8 +76,21 @@ extension MainViewController: SKPaymentTransactionObserver {
     }
     
     private func restore(transaction: SKPaymentTransaction) {
-        guard let productIdentifier = transaction.original?.payment.productIdentifier else { return }
-        
+        guard let productIdentifier = transaction.original?.payment.productIdentifier else {
+            let alertViewController = showBuyConfirmationDialog(message: "Para agregar más memes, necesitas la versión Premium de Mis Memes", title: "Mis Memes Premium") { response  in
+                if response {
+                    print("Ir a la App Store")
+                    guard let product = self.premiumProduct else { return }
+                    let payment = SKPayment(product: product)
+                    SKPaymentQueue.default().add(payment)
+                } else {
+                    print("No gracias!")
+                    return
+                }
+            }
+            present(alertViewController, animated: true, completion: nil)
+            return
+        }
         print("restore... \(productIdentifier)")
         deliverPurchaseNotificationFor(identifier: productIdentifier)
         SKPaymentQueue.default().finishTransaction(transaction)
@@ -87,4 +101,5 @@ extension MainViewController: SKPaymentTransactionObserver {
         UserDefaults.standard.set(true, forKey: "premium")
         NotificationCenter.default.post(name: .MisMemesPurchaseNotification, object: identifier)
     }
+    
 }

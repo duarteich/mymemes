@@ -28,7 +28,9 @@ extension MainViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        selectedMemes.remove(at: indexPath.row)
+        if let index = selectedMemes.firstIndex(of: indexPath.row) {
+            selectedMemes.remove(at: index)
+        }
         if selectedMemes.isEmpty {
             navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
         } else {

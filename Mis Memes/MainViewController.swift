@@ -66,9 +66,9 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
                                                object: nil)
         SKPaymentQueue.default().add(self)
         isPremium = UserDefaults.standard.bool(forKey: "premium")
-        if !isPremium {
-            restorePurchases()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
+                                               name: .MisMemesPurchaseNotification,
+                                               object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,18 +78,13 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     
     @objc func addMeme(_ sender: UIBarButtonItem) {
         if(memes.count >= 5 && !isPremium) {
-            let alertViewController = showBuyConfirmationDialog(message: "Para agregar más memes, necesitas la versión Premium de Mis Memes", title: "Mis Memes Premium") { response  in
-                if response {
-                    print("Ir a la App Store")
-                    guard let product = self.premiumProduct else { return }
-                    let payment = SKPayment(product: product)
-                    SKPaymentQueue.default().add(payment)
-                } else {
-                    print("No gracias!")
-                }
-            }
-            present(alertViewController, animated: true, completion: nil)
+            restorePurchases()
+        } else {
+            selectImage()
         }
+    }
+    
+    func selectImage() {
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
@@ -128,16 +123,21 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     @objc func deleteItems() {
-        selectedMemes.sort()
-        var counter = 0
-        for index in selectedMemes {
-            deleteImage(imageName: memes[index - counter].imageName)
-            memes.remove(at: index - counter)
-            counter += 1
+        let alertViewController = showConfirmationDialog(message: "¿Deseas eliminar los memes seleccionados de tu colección?", title: "Mis Memes") { response in
+            if response {
+                self.selectedMemes.sort()
+                var counter = 0
+                for index in self.selectedMemes {
+                    self.deleteImage(imageName: self.memes[index - counter].imageName)
+                    self.memes.remove(at: index - counter)
+                    counter += 1
+                }
+                self.selecting = false
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(self.memes), forKey:"memes")
+                self.loadMemes()
+            }
         }
-        selecting = false
-        UserDefaults.standard.set(try? PropertyListEncoder().encode(memes), forKey:"memes")
-        loadMemes()
+        present(alertViewController, animated: true, completion: nil)
     }
     
     @objc func shareItems() {
