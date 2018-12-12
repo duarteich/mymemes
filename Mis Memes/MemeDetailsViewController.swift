@@ -32,11 +32,18 @@ class MemeDetailsViewController: UIViewController {
             }
             navigationItem.rightBarButtonItems = [shareItem, deleteItem]
         } else {
-            title = "Nuevo Meme"
+            title = NSLocalizedString("new_meme", comment: "")
             imageView.image = image
             navigationItem.leftBarButtonItem = leftItem
             navigationItem.rightBarButtonItem = saveItem
         }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func endEditing() {
+        nameTextField.resignFirstResponder()
     }
     
     @objc func cancel() {

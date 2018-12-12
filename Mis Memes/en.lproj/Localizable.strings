@@ -15,3 +15,6 @@
 "premium_title" = "My Memes Premium";
 "ok" = "OK";
 "buy" = "Buy";
+"new_meme" = "New Meme";
+"empty_name" = "Please enter the name of the meme.";
+"name_already_exists" = "There's already a meme with that name. Please use another one.";

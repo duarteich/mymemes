@@ -20,11 +20,15 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     let itemsPerRow: CGFloat = 4
     let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     
     let imagePicker = UIImagePickerController()
     var memes = [Meme]()
-    var selectedMemes = [Int]()
+    var filteredMemes = [Meme]()
+    var selectedMemes = [Meme]()
+    var filtering = false
     var premiumProduct: SKProduct?
     var isPremium: Bool = false
     
@@ -50,6 +54,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        searchBar.delegate = self
         imagePicker.delegate = self
         addItem = UIBarButtonItem(barButtonSystemItem: .add
         , target: self, action: #selector(addMeme))
@@ -66,15 +71,23 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
                                                name: .MisMemesPurchaseNotification,
                                                object: nil)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        tap.cancelsTouchesInView = false
+        self.collectionView.addGestureRecognizer(tap)
+    }
+    
+    @objc func endEditing() {
+        searchBar.resignFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        searchBar.text = ""
         loadMemes()
     }
     
     @objc func addMeme(_ sender: UIBarButtonItem) {
-        if(memes.count >= 5 && !isPremium) {
+        if(memes.count >= 15 && !isPremium) {
             restorePurchases()
         } else {
             selectImage()
@@ -91,9 +104,13 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     func memeDetailsDidSave(memeDetailsViewController: MemeDetailsViewController) {
-        navigationController?.popViewController(animated: true)
         guard let image = memeDetailsViewController.imageView?.image else { return }
-        guard let name = memeDetailsViewController.nameTextField.text else { return }
+        guard let name = memeDetailsViewController.nameTextField.text?.trimmingCharacters(in: .whitespaces) else { return }
+        if nameIsUsed(name) {
+            showAlertDialog(message: NSLocalizedString("name_already_exists", comment: ""), title: NSLocalizedString("appname", comment: ""), controller: self)
+            return
+        }
+        navigationController?.popViewController(animated: true)
         let imageName = name.replacingOccurrences(of: " ", with: "_")
         saveImageDocumentDirectory(image: image, imageName: imageName)
         let meme = Meme(name: name, imageName: imageName)
@@ -105,8 +122,10 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     func memeDetailsDidDelete(meme: Meme) {
         let alertViewController = showConfirmationDialog(message: NSLocalizedString("delete_single_confirmation", comment: ""), title: NSLocalizedString("appname", comment: "")) { response in
             if response {
+                self.loadMemes()
                 if let index = self.memes.index(where : { $0.imageName == meme.imageName}) {
                     self.memes.remove(at: index)
+                    self.deleteImage(imageName: meme.imageName)
                     UserDefaults.standard.set(try? PropertyListEncoder().encode(self.memes), forKey:"memes")
                     self.navigationController?.popViewController(animated: true)
                 }
@@ -115,19 +134,27 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         present(alertViewController, animated: true, completion: nil)
     }
     
+    func nameIsUsed(_ name: String) -> Bool {
+        if self.memes.contains(where: { $0.name == name}) {
+            return true
+        }
+        return false
+    }
+    
     @objc func selectItems() {
         selecting = !selecting
     }
     
     @objc func deleteItems() {
+        searchBar.text = ""
         let alertViewController = showConfirmationDialog(message: NSLocalizedString("delete_multiple_confirmation", comment: ""), title: NSLocalizedString("appname", comment: "")) { response in
             if response {
-                self.selectedMemes.sort()
-                var counter = 0
-                for index in self.selectedMemes {
-                    self.deleteImage(imageName: self.memes[index - counter].imageName)
-                    self.memes.remove(at: index - counter)
-                    counter += 1
+                for meme in self.selectedMemes {
+                    if let index = self.memes.index(where : { $0.imageName == meme.imageName}) {
+                        self.memes.remove(at: index)
+                        self.deleteImage(imageName: meme.imageName)
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
                 self.selecting = false
                 UserDefaults.standard.set(try? PropertyListEncoder().encode(self.memes), forKey:"memes")
@@ -139,8 +166,8 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     
     @objc func shareItems() {
         var images = [UIImage]()
-        for index in selectedMemes {
-            guard let image = getImage(imageName: memes[index].imageName) else { continue }
+        for meme in selectedMemes {
+            guard let image = getImage(imageName: meme.imageName) else { continue }
             images.append(image)
         }
         let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
@@ -148,20 +175,27 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         self.present(activityViewController, animated: true, completion: nil)
     }
     
-    private func loadMemes() {
+    func loadMemes() {
+        filtering = false
         if let data = UserDefaults.standard.value(forKey:"memes") as? Data {
             guard let memes = try? PropertyListDecoder().decode(Array<Meme>.self, from: data) else { return }
             self.memes = memes
             if !memes.isEmpty {
                 navigationItem.leftBarButtonItem = leftItem
+                searchBar.isHidden = false
+                collectionViewTopConstraint.constant = 56
                 collectionView.restore()
             } else {
                 navigationItem.leftBarButtonItem = nil
+                searchBar.isHidden = true
+                collectionViewTopConstraint.constant = 0
                 collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
             }
             collectionView.reloadData()
         } else {
             collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
+            searchBar.isHidden = true
+            collectionViewTopConstraint.constant = 0
         }
     }
     
@@ -202,40 +236,10 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         let url = NSURL(string: path)
         return url!
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-        let availableWidth = view.frame.width - paddingSpace
-        let widthPerItem = availableWidth / itemsPerRow
-        
-        return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInsets
-    }
+
 }
 
 extension Notification.Name {
     static let MisMemesPurchaseNotification = Notification.Name("MisMemesPurchaseNotification")
-}
-
-extension UICollectionView {
-    
-    func setEmptyMessage(_ message: String) {
-        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
-        messageLabel.text = message
-        messageLabel.textColor = .black
-        messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = .center;
-        messageLabel.font = UIFont.systemFont(ofSize: 18)
-        messageLabel.sizeToFit()
-        
-        self.backgroundView = messageLabel;
-    }
-    
-    func restore() {
-        self.backgroundView = nil
-    }
 }
 

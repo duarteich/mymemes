@@ -19,6 +19,8 @@
 		A873293021B042670029CD86 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A873292F21B042670029CD86 /* StoreKit.framework */; };
 		A8BF508F21B70211003BBD7A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8BF509121B70211003BBD7A /* Localizable.strings */; };
 		A8BFB399219A29060069549F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BFB398219A29060069549F /* Meme.swift */; };
+		A8E81C2421B72F6E00BF338C /* MainViewController+SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E81C2321B72F6E00BF338C /* MainViewController+SearchBar.swift */; };
+		A8F8EE3621B9850400A3B6AF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8F8EE3821B9850400A3B6AF /* InfoPlist.strings */; };
 		AF7100A921B0E8EF0018F2F8 /* MainViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7100A821B0E8EF0018F2F8 /* MainViewController+DataSource.swift */; };
 		AF7100AB21B0E90D0018F2F8 /* MainViewController+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7100AA21B0E90D0018F2F8 /* MainViewController+Delegate.swift */; };
 		AF7100AD21B0E9210018F2F8 /* MainViewController+StoreKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7100AC21B0E9210018F2F8 /* MainViewController+StoreKit.swift */; };
@@ -65,6 +67,9 @@
 		A8BF509021B70211003BBD7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A8BF509221B7023A003BBD7A /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A8BFB398219A29060069549F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meme.swift; sourceTree = "<group>"; };
+		A8E81C2321B72F6E00BF338C /* MainViewController+SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+SearchBar.swift"; sourceTree = "<group>"; };
+		A8F8EE3721B9850400A3B6AF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A8F8EE3921B9850600A3B6AF /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		AF7100A821B0E8EF0018F2F8 /* MainViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+DataSource.swift"; sourceTree = "<group>"; };
 		AF7100AA21B0E90D0018F2F8 /* MainViewController+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Delegate.swift"; sourceTree = "<group>"; };
 		AF7100AC21B0E9210018F2F8 /* MainViewController+StoreKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StoreKit.swift"; sourceTree = "<group>"; };
@@ -135,6 +140,8 @@
 				AF7100AA21B0E90D0018F2F8 /* MainViewController+Delegate.swift */,
 				AF7100AC21B0E9210018F2F8 /* MainViewController+StoreKit.swift */,
 				A8BF509121B70211003BBD7A /* Localizable.strings */,
+				A8E81C2321B72F6E00BF338C /* MainViewController+SearchBar.swift */,
+				A8F8EE3821B9850400A3B6AF /* InfoPlist.strings */,
 			);
 			path = "Mis Memes";
 			sourceTree = "<group>";
@@ -279,6 +286,7 @@
 				A8BF508F21B70211003BBD7A /* Localizable.strings in Resources */,
 				A80530E22195FD1E0080FB0E /* Assets.xcassets in Resources */,
 				A80530E02195FD1C0080FB0E /* Main.storyboard in Resources */,
+				A8F8EE3621B9850400A3B6AF /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +316,7 @@
 				AF7100AD21B0E9210018F2F8 /* MainViewController+StoreKit.swift in Sources */,
 				AF7100AB21B0E90D0018F2F8 /* MainViewController+Delegate.swift in Sources */,
 				A80530DD2195FD1C0080FB0E /* MainViewController.swift in Sources */,
+				A8E81C2421B72F6E00BF338C /* MainViewController+SearchBar.swift in Sources */,
 				A815BAEB21A307270060AF44 /* MemeCell.swift in Sources */,
 				A80530DB2195FD1C0080FB0E /* AppDelegate.swift in Sources */,
 				AFF32673219BDDBB00FCD913 /* MemeDetailsViewController.swift in Sources */,
@@ -375,6 +384,15 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
+		A8F8EE3821B9850400A3B6AF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A8F8EE3721B9850400A3B6AF /* en */,
+				A8F8EE3921B9850600A3B6AF /* es-419 */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -430,7 +448,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -486,7 +504,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -510,7 +528,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.makingyourapp.mismemes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -528,7 +546,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.makingyourapp.mismemes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

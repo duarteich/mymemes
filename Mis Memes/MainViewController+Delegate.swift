@@ -10,9 +10,21 @@ import UIKit
 
 extension MainViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+        let availableWidth = view.frame.width - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        
+        return CGSize(width: widthPerItem, height: widthPerItem)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInsets
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if selecting {
-            selectedMemes.append(indexPath.row)
+            selectedMemes.append(filtering ? filteredMemes[indexPath.row] : memes[indexPath.row])
             if selectedMemes.isEmpty {
                 navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
             } else {
@@ -21,14 +33,15 @@ extension MainViewController: UICollectionViewDelegate {
         } else {
             collectionView.deselectItem(at: indexPath, animated: false)
             let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
-            controller.meme = memes[indexPath.row]
+            controller.meme = filtering ? filteredMemes[indexPath.row] : memes[indexPath.row]
             controller.delegate = self
             navigationController?.pushViewController(controller, animated: true)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if let index = selectedMemes.firstIndex(of: indexPath.row) {
+        let memesData = filtering ? self.filteredMemes : self.memes
+        if let index = self.selectedMemes.index(where : { $0.imageName == memesData[indexPath.row].imageName }) {
             selectedMemes.remove(at: index)
         }
         if selectedMemes.isEmpty {
@@ -36,5 +49,24 @@ extension MainViewController: UICollectionViewDelegate {
         } else {
             navigationItem.rightBarButtonItems = [deleteItem, shareItem] as? [UIBarButtonItem]
         }
+    }
+}
+
+extension UICollectionView {
+    
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .black
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = .center;
+        messageLabel.font = UIFont.systemFont(ofSize: 18)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel;
+    }
+    
+    func restore() {
+        self.backgroundView = nil
     }
 }

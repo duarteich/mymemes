@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  Mis Memes
+
+  Created by Christyan Duarte on 12/6/18.
+  Copyright © 2018 Making your app. All rights reserved.
+*/
+"CFBundleDisplayName" = "My Memes";

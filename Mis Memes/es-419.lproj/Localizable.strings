@@ -15,3 +15,6 @@
 "premium_title" = "Mis Memes Premium";
 "ok" = "Aceptar";
 "buy" = "Comprar";
+"new_meme" = "Nuevo Meme";
+"empty_name" = "Por favor, introduce el nombre del meme.";
+"name_already_exists" = "Ya existe un meme con ese nombre. Por favor, usa uno diferente.";

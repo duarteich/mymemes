@@ -11,14 +11,19 @@ import UIKit
 extension MainViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return memes.count
+        if filtering {
+            return filteredMemes.count
+        } else {
+            return memes.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "memeCell", for: indexPath) as? MemeCell else {
             return MemeCell()
         }
-        if let image = getImage(imageName: memes[indexPath.row].imageName) {
+        let memesData = filtering ? self.filteredMemes : self.memes
+        if let image = getImage(imageName: memesData[indexPath.row].imageName) {
             cell.imageView.image = image
         }
         return cell
