@@ -24,6 +24,19 @@ extension MainViewController: SKProductsRequestDelegate {
         self.premiumProduct = response.products.first
     }
     
+    func buyPremium() {
+        let alertViewController = showBuyConfirmationDialog(message: NSLocalizedString("premium_message", comment: ""), title: NSLocalizedString("premium_title", comment: "")) { response  in
+            if response {
+                guard let product = self.premiumProduct else { return }
+                let payment = SKPayment(product: product)
+                SKPaymentQueue.default().add(payment)
+            } else {
+                return
+            }
+        }
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
 }
 
 extension MainViewController: SKPaymentTransactionObserver {
@@ -56,6 +69,12 @@ extension MainViewController: SKPaymentTransactionObserver {
         }
     }
     
+    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+        if !isPremium {
+            buyPremium()
+        }
+    }
+    
     private func complete(transaction: SKPaymentTransaction) {
         deliverPurchaseNotificationFor(identifier: transaction.payment.productIdentifier)
         SKPaymentQueue.default().finishTransaction(transaction)
@@ -72,19 +91,7 @@ extension MainViewController: SKPaymentTransactionObserver {
     }
     
     private func restore(transaction: SKPaymentTransaction) {
-        guard let productIdentifier = transaction.original?.payment.productIdentifier else {
-            let alertViewController = showBuyConfirmationDialog(message: NSLocalizedString("premium_message", comment: ""), title: NSLocalizedString("premium_title", comment: "")) { response  in
-                if response {
-                    guard let product = self.premiumProduct else { return }
-                    let payment = SKPayment(product: product)
-                    SKPaymentQueue.default().add(payment)
-                } else {
-                    return
-                }
-            }
-            present(alertViewController, animated: true, completion: nil)
-            return
-        }
+        guard let productIdentifier = transaction.original?.payment.productIdentifier else { return }
         deliverPurchaseNotificationFor(identifier: productIdentifier)
         SKPaymentQueue.default().finishTransaction(transaction)
     }
@@ -93,6 +100,7 @@ extension MainViewController: SKPaymentTransactionObserver {
         guard let identifier = identifier else { return }
         UserDefaults.standard.set(true, forKey: "premium")
         NotificationCenter.default.post(name: .MisMemesPurchaseNotification, object: identifier)
+        selectImage()
     }
     
 }
