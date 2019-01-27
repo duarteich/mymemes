@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import StoreKit
+import MaterialComponents
 
 protocol MemeDetailsViewControllerDelegate {
     func memeDetailsDidSave(memeDetailsViewController: MemeDetailsViewController)
@@ -16,6 +16,8 @@ protocol MemeDetailsViewControllerDelegate {
 }
 
 class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MemeDetailsViewControllerDelegate {
+    
+    var appBar = MDCAppBar()
 
     let itemsPerRow: CGFloat = 4
     let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
@@ -29,7 +31,6 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     var filteredMemes = [Meme]()
     var selectedMemes = [Meme]()
     var filtering = false
-    var premiumProduct: SKProduct?
     var isPremium: Bool = false
     
     var addItem : UIBarButtonItem?
@@ -52,28 +53,24 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.addChild(appBar.headerViewController)
+        self.appBar.headerViewController.headerView.trackingScrollView = self.collectionView
+        appBar.addSubviewsToParent()
         collectionView.delegate = self
         collectionView.dataSource = self
         searchBar.delegate = self
         imagePicker.delegate = self
-        addItem = UIBarButtonItem(barButtonSystemItem: .add
-        , target: self, action: #selector(addMeme))
+        addItem = UIBarButtonItem(image: UIImage(named: "add_icon"), style: .plain, target: self, action: #selector(addMeme(_:)))
         deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItems))
         shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareItems))
         navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
         leftItem = UIBarButtonItem(title: NSLocalizedString("select", comment: ""), style: .plain, target: self, action: #selector(selectItems))
-        requestProducts()
-        NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
-                                               name: .MisMemesPurchaseNotification,
-                                               object: nil)
-        SKPaymentQueue.default().add(self)
-        isPremium = UserDefaults.standard.bool(forKey: "premium")
-        NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.handlePurchaseNotification(_:)),
-                                               name: .MisMemesPurchaseNotification,
-                                               object: nil)
         let tap = UITapGestureRecognizer(target: self, action: #selector(endEditing))
         tap.cancelsTouchesInView = false
         self.collectionView.addGestureRecognizer(tap)
+        self.view.backgroundColor = ApplicationScheme.shared.colorScheme.surfaceColor
+        self.collectionView.backgroundColor = ApplicationScheme.shared.colorScheme.surfaceColor
+        MDCAppBarColorThemer.applySemanticColorScheme(ApplicationScheme.shared.colorScheme, to: self.appBar)
     }
     
     @objc func endEditing() {
@@ -87,11 +84,11 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     }
     
     @objc func addMeme(_ sender: UIBarButtonItem) {
-        if(memes.count >= 15 && !isPremium) {
-            restorePurchases()
-        } else {
-            selectImage()
-        }
+        //selectImage()
+        let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
+        //controller.image = pickedImage
+        controller.delegate = self
+        present(controller, animated: true, completion: nil)
     }
     
     func selectImage() {
@@ -204,7 +201,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
             controller.image = pickedImage
             controller.delegate = self
-            navigationController?.pushViewController(controller, animated: true)
+            present(controller, animated: true, completion: nil)
         }
         dismiss(animated: true, completion: nil)
     }
@@ -239,7 +236,38 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
 
 }
 
-extension Notification.Name {
-    static let MisMemesPurchaseNotification = Notification.Name("MisMemesPurchaseNotification")
+extension MainViewController {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.appBar.headerViewController.headerView.trackingScrollView {
+            self.appBar.headerViewController.headerView.trackingScrollDidScroll()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (scrollView == self.appBar.headerViewController.headerView.trackingScrollView) {
+            self.appBar.headerViewController.headerView.trackingScrollDidEndDecelerating()
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView,
+                                           willDecelerate decelerate: Bool) {
+        let headerView = self.appBar.headerViewController.headerView
+        if (scrollView == headerView.trackingScrollView) {
+            headerView.trackingScrollDidEndDraggingWillDecelerate(decelerate)
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                            withVelocity velocity: CGPoint,
+                                            targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let headerView = self.appBar.headerViewController.headerView
+        if (scrollView == headerView.trackingScrollView) {
+            headerView.trackingScrollWillEndDragging(withVelocity: velocity,
+                                                     targetContentOffset: targetContentOffset)
+        }
+    }
 }
+
+
 
