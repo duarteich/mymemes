@@ -92,20 +92,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Meme name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-IO-CUp" customClass="MDCTextField">
-                                <rect key="frame" x="8" y="82" width="359" height="30"/>
+                                <rect key="frame" x="8" y="82" width="359" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="wcc-TB-8td"/>
+                                    <constraint firstAttribute="height" constant="50" id="wcc-TB-8td"/>
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
-                                <rect key="frame" x="8" y="128" width="359" height="523"/>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="defaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Ef-rf-wad">
+                                <rect key="frame" x="8" y="248" width="359" height="403"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dvk-nB-UiZ" customClass="MDCRaisedButton">
-                                <rect key="frame" x="125.5" y="172" width="124" height="48"/>
+                                <rect key="frame" x="125.5" y="192" width="124" height="48"/>
                                 <color key="backgroundColor" red="0.3411764705882353" green="0.12156862745098039" blue="0.89803921568627454" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="ALp-md-Gec"/>
@@ -114,6 +114,9 @@
                                 <state key="normal" title="SELECT IMAGE">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="selectImage:" destination="eXg-wR-k0M" eventType="touchUpInside" id="dzW-oS-SxQ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -121,7 +124,6 @@
                             <constraint firstItem="eW9-rX-ywN" firstAttribute="trailing" secondItem="2Ef-rf-wad" secondAttribute="trailing" constant="8" id="OJg-7a-bEQ"/>
                             <constraint firstItem="eW9-rX-ywN" firstAttribute="trailing" secondItem="0Ak-IO-CUp" secondAttribute="trailing" constant="8" id="SSC-Xr-Yj3"/>
                             <constraint firstItem="Dvk-nB-UiZ" firstAttribute="centerX" secondItem="R3g-Gl-3M9" secondAttribute="centerX" id="VOf-MY-68E"/>
-                            <constraint firstItem="2Ef-rf-wad" firstAttribute="top" secondItem="0Ak-IO-CUp" secondAttribute="bottom" constant="16" id="Vim-QB-4TK"/>
                             <constraint firstItem="0Ak-IO-CUp" firstAttribute="leading" secondItem="eW9-rX-ywN" secondAttribute="leading" constant="8" id="Zjo-1e-Fsy"/>
                             <constraint firstItem="Dvk-nB-UiZ" firstAttribute="top" secondItem="0Ak-IO-CUp" secondAttribute="bottom" constant="60" id="bnh-9t-cwP"/>
                             <constraint firstItem="0Ak-IO-CUp" firstAttribute="top" secondItem="eW9-rX-ywN" secondAttribute="top" constant="62" id="kba-4f-HOr"/>
@@ -133,6 +135,7 @@
                     <connections>
                         <outlet property="imageView" destination="2Ef-rf-wad" id="YqZ-Ip-T9Y"/>
                         <outlet property="nameTextField" destination="0Ak-IO-CUp" id="Fdi-Ev-m6V"/>
+                        <outlet property="selectImageButton" destination="Dvk-nB-UiZ" id="Ubb-sv-UbZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8z2-r2-xMc" userLabel="First Responder" sceneMemberID="firstResponder"/>

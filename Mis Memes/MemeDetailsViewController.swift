@@ -9,12 +9,18 @@
 import UIKit
 import MaterialComponents
 
-class MemeDetailsViewController: UIViewController {
+class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var nameTextField: MDCTextField!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var selectImageButton: MDCRaisedButton!
     
+    @IBAction func selectImage(_ sender: Any) {
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
     var appBar = MDCAppBar()
+    let imagePicker = UIImagePickerController()
     var nameController: MDCTextInputControllerOutlined?
     
     var meme: Meme?
@@ -25,6 +31,7 @@ class MemeDetailsViewController: UIViewController {
         super.viewDidLoad()
         self.addChild(appBar.headerViewController)
         appBar.addSubviewsToParent()
+        imagePicker.delegate = self
         nameController = MDCTextInputControllerOutlined(textInput: nameTextField)
         let leftItem = UIBarButtonItem(title: "CANCEL", style: .plain, target: self, action: #selector(cancel))
         let saveItem = UIBarButtonItem(title: "SAVE", style: .plain, target: self, action: #selector(save))
@@ -33,14 +40,15 @@ class MemeDetailsViewController: UIViewController {
         if let meme = meme {
             title = meme.name
             nameTextField.isHidden = true
+            selectImageButton.isHidden = true
             if let image = getImage(imageName: meme.imageName) {
                 self.image = image
                 imageView.image = image
+                imageView.isHidden = false
             }
             navigationItem.rightBarButtonItems = [shareItem, deleteItem]
         } else {
             title = NSLocalizedString("new_meme", comment: "")
-            imageView.image = image
             navigationItem.leftBarButtonItem = leftItem
             navigationItem.rightBarButtonItem = saveItem
         }
@@ -55,7 +63,7 @@ class MemeDetailsViewController: UIViewController {
     }
     
     @objc func cancel() {
-        delegate?.memeDetailsDidCancel()
+        delegate?.memeDetailsDidCancel(memeDetailsViewController: self)
     }
     
     @objc func save() {
@@ -78,4 +86,16 @@ class MemeDetailsViewController: UIViewController {
         delegate?.memeDetailsDidDelete(meme: meme)
     }
 
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension MemeDetailsViewController {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let pickedImage = info[.originalImage] as? UIImage {
+            self.image = pickedImage
+            self.imageView.isHidden = false
+            self.imageView.image = self.image
+        }
+        dismiss(animated: true, completion: nil)
+    }
 }

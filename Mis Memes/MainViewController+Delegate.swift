@@ -35,7 +35,7 @@ extension MainViewController: UICollectionViewDelegate {
             let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
             controller.meme = filtering ? filteredMemes[indexPath.row] : memes[indexPath.row]
             controller.delegate = self
-            navigationController?.pushViewController(controller, animated: true)
+            present(controller, animated: true, completion: nil)
         }
     }
     

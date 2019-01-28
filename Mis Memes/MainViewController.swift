@@ -11,11 +11,11 @@ import MaterialComponents
 
 protocol MemeDetailsViewControllerDelegate {
     func memeDetailsDidSave(memeDetailsViewController: MemeDetailsViewController)
-    func memeDetailsDidCancel()
+    func memeDetailsDidCancel(memeDetailsViewController: MemeDetailsViewController)
     func memeDetailsDidDelete(meme: Meme)
 }
 
-class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MemeDetailsViewControllerDelegate {
+class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, MemeDetailsViewControllerDelegate {
     
     var appBar = MDCAppBar()
 
@@ -59,7 +59,6 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         collectionView.delegate = self
         collectionView.dataSource = self
         searchBar.delegate = self
-        imagePicker.delegate = self
         addItem = UIBarButtonItem(image: UIImage(named: "add_icon"), style: .plain, target: self, action: #selector(addMeme(_:)))
         deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItems))
         shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareItems))
@@ -91,13 +90,8 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         present(controller, animated: true, completion: nil)
     }
     
-    func selectImage() {
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    func memeDetailsDidCancel() {
-        navigationController?.popViewController(animated: true)
+    func memeDetailsDidCancel(memeDetailsViewController: MemeDetailsViewController) {
+        memeDetailsViewController.dismiss(animated: true, completion: nil)
     }
     
     func memeDetailsDidSave(memeDetailsViewController: MemeDetailsViewController) {
@@ -107,7 +101,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             showAlertDialog(message: NSLocalizedString("name_already_exists", comment: ""), title: NSLocalizedString("appname", comment: ""), controller: self)
             return
         }
-        navigationController?.popViewController(animated: true)
+        memeDetailsViewController.dismiss(animated: true, completion: nil)
         let imageName = name.replacingOccurrences(of: " ", with: "_")
         saveImageDocumentDirectory(image: image, imageName: imageName)
         let meme = Meme(name: name, imageName: imageName)
@@ -236,6 +230,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
 
 }
 
+//MARK: - UIScrollViewDelegate
 extension MainViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
