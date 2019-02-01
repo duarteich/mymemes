@@ -177,7 +177,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             self.memes = memes
             if !memes.isEmpty {
                 navigationItem.leftBarButtonItem = selectItem
-                //searchBar.isHidden = false
+                searchBar.isHidden = false
                 collectionView.restore()
             } else {
                 navigationItem.leftBarButtonItem = nil
