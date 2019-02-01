@@ -12,19 +12,18 @@ import MaterialComponents
 protocol MemeDetailsViewControllerDelegate {
     func memeDetailsDidSave(memeDetailsViewController: MemeDetailsViewController)
     func memeDetailsDidCancel(memeDetailsViewController: MemeDetailsViewController)
-    func memeDetailsDidDelete(meme: Meme)
+    func memeDetailsDidDelete(controller: MemeDetailsViewController, meme: Meme)
 }
 
 class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, MemeDetailsViewControllerDelegate {
     
     var appBar = MDCAppBar()
 
-    let itemsPerRow: CGFloat = 4
+    let itemsPerRow: CGFloat = 2
     let sectionInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     
     let imagePicker = UIImagePickerController()
     var memes = [Meme]()
@@ -34,7 +33,8 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
     var isPremium: Bool = false
     
     var addItem : UIBarButtonItem?
-    var leftItem: UIBarButtonItem?
+    var cancelItem: UIBarButtonItem?
+    var selectItem: UIBarButtonItem?
     var deleteItem: UIBarButtonItem?
     var shareItem: UIBarButtonItem?
     var selecting: Bool = false {
@@ -43,32 +43,38 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             collectionView?.selectItem(at: nil, animated: true, scrollPosition: .top)
             selectedMemes.removeAll(keepingCapacity: false)
             if selecting {
-                navigationItem.leftBarButtonItem?.title = NSLocalizedString("cancel", comment: "")
+                navigationItem.leftBarButtonItem = cancelItem
             } else {
-                navigationItem.leftBarButtonItem?.title = NSLocalizedString("select", comment: "")
-                 navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
+                navigationItem.leftBarButtonItem = selectItem
+                navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
             }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addChild(appBar.headerViewController)
-        self.appBar.headerViewController.headerView.trackingScrollView = self.collectionView
-        appBar.addSubviewsToParent()
+        configureAppBar()
         collectionView.delegate = self
         collectionView.dataSource = self
         searchBar.delegate = self
         addItem = UIBarButtonItem(image: UIImage(named: "add_icon"), style: .plain, target: self, action: #selector(addMeme(_:)))
-        deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItems))
-        shareItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareItems))
+        shareItem = UIBarButtonItem(image: UIImage(named: "share_icon"), style: .plain, target: self, action: #selector(shareItems))
+        deleteItem = UIBarButtonItem(image: UIImage(named: "delete_icon"), style: .plain, target: self, action: #selector(deleteItems))
         navigationItem.rightBarButtonItems = [addItem] as? [UIBarButtonItem]
-        leftItem = UIBarButtonItem(title: NSLocalizedString("select", comment: ""), style: .plain, target: self, action: #selector(selectItems))
+        selectItem = UIBarButtonItem(title: NSLocalizedString("select", comment: ""), style: .plain, target: self, action: #selector(selectItems))
+        cancelItem = UIBarButtonItem(title: NSLocalizedString("cancel", comment: ""), style: .plain, target: self, action: #selector(selectItems))
         let tap = UITapGestureRecognizer(target: self, action: #selector(endEditing))
         tap.cancelsTouchesInView = false
         self.collectionView.addGestureRecognizer(tap)
         self.view.backgroundColor = ApplicationScheme.shared.colorScheme.surfaceColor
         self.collectionView.backgroundColor = ApplicationScheme.shared.colorScheme.surfaceColor
+    }
+    
+    func configureAppBar() {
+        self.addChild(appBar.headerViewController)
+        let headerView = appBar.headerViewController.headerView
+        print(headerView.bounds.height)
+        appBar.addSubviewsToParent()
         MDCAppBarColorThemer.applySemanticColorScheme(ApplicationScheme.shared.colorScheme, to: self.appBar)
     }
     
@@ -80,12 +86,11 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         super.viewDidAppear(animated)
         searchBar.text = ""
         loadMemes()
+        selecting = false
     }
     
     @objc func addMeme(_ sender: UIBarButtonItem) {
-        //selectImage()
         let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
-        //controller.image = pickedImage
         controller.delegate = self
         present(controller, animated: true, completion: nil)
     }
@@ -110,7 +115,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         loadMemes()
     }
     
-    func memeDetailsDidDelete(meme: Meme) {
+    func memeDetailsDidDelete(controller: MemeDetailsViewController, meme: Meme) {
         let alertViewController = showConfirmationDialog(message: NSLocalizedString("delete_single_confirmation", comment: ""), title: NSLocalizedString("appname", comment: "")) { response in
             if response {
                 self.loadMemes()
@@ -118,11 +123,11 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
                     self.memes.remove(at: index)
                     self.deleteImage(imageName: meme.imageName)
                     UserDefaults.standard.set(try? PropertyListEncoder().encode(self.memes), forKey:"memes")
-                    self.navigationController?.popViewController(animated: true)
+                    controller.dismiss(animated: true, completion: nil)
                 }
             }
         }
-        present(alertViewController, animated: true, completion: nil)
+        controller.present(alertViewController, animated: true, completion: nil)
     }
     
     func nameIsUsed(_ name: String) -> Bool {
@@ -144,7 +149,6 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
                     if let index = self.memes.index(where : { $0.imageName == meme.imageName}) {
                         self.memes.remove(at: index)
                         self.deleteImage(imageName: meme.imageName)
-                        self.navigationController?.popViewController(animated: true)
                     }
                 }
                 self.selecting = false
@@ -172,21 +176,18 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
             guard let memes = try? PropertyListDecoder().decode(Array<Meme>.self, from: data) else { return }
             self.memes = memes
             if !memes.isEmpty {
-                navigationItem.leftBarButtonItem = leftItem
-                searchBar.isHidden = false
-                collectionViewTopConstraint.constant = 56
+                navigationItem.leftBarButtonItem = selectItem
+                //searchBar.isHidden = false
                 collectionView.restore()
             } else {
                 navigationItem.leftBarButtonItem = nil
                 searchBar.isHidden = true
-                collectionViewTopConstraint.constant = 0
                 collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
             }
             collectionView.reloadData()
         } else {
             collectionView.setEmptyMessage(NSLocalizedString("no_memes", comment: ""))
             searchBar.isHidden = true
-            collectionViewTopConstraint.constant = 0
         }
     }
     

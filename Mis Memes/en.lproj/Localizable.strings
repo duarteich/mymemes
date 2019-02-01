@@ -7,6 +7,7 @@
 */
 "appname" = "My Memes";
 "cancel" = "Cancel";
+"save" = "Save";
 "select" = "Select";
 "delete_single_confirmation" = "Remove this meme from your collection?";
 "delete_multiple_confirmation" = "Remove selected memes from your collection?";
@@ -18,3 +19,4 @@
 "new_meme" = "New Meme";
 "empty_name" = "Please enter the name of the meme.";
 "name_already_exists" = "There's already a meme with that name. Please use another one.";
+"select_image" = "SELECT IMAGE";

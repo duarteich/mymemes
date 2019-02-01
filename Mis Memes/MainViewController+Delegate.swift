@@ -33,6 +33,7 @@ extension MainViewController: UICollectionViewDelegate {
         } else {
             collectionView.deselectItem(at: indexPath, animated: false)
             let controller = storyboard?.instantiateViewController(withIdentifier: "memeDetailsViewController") as! MemeDetailsViewController
+            controller.modalTransitionStyle = .crossDissolve
             controller.meme = filtering ? filteredMemes[indexPath.row] : memes[indexPath.row]
             controller.delegate = self
             present(controller, animated: true, completion: nil)

@@ -33,10 +33,12 @@ class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelega
         appBar.addSubviewsToParent()
         imagePicker.delegate = self
         nameController = MDCTextInputControllerOutlined(textInput: nameTextField)
-        let leftItem = UIBarButtonItem(title: "CANCEL", style: .plain, target: self, action: #selector(cancel))
-        let saveItem = UIBarButtonItem(title: "SAVE", style: .plain, target: self, action: #selector(save))
+        selectImageButton.setTitle(NSLocalizedString("select_image", comment: ""), for: .normal)
+        let leftItem = UIBarButtonItem(title: NSLocalizedString("cancel", comment: ""), style: .plain, target: self, action: #selector(cancel))
+        let saveItem = UIBarButtonItem(title: NSLocalizedString("save", comment: ""), style: .plain, target: self, action: #selector(save))
         let shareItem = UIBarButtonItem(image: UIImage(named: "share_icon"), style: .plain, target: self, action: #selector(share))
         let deleteItem = UIBarButtonItem(image: UIImage(named: "delete_icon"), style: .plain, target: self, action: #selector(deleteMeme))
+        let backItem = UIBarButtonItem(image: UIImage(named: "back_icon"), style: .plain, target: self, action: #selector(back))
         if let meme = meme {
             title = meme.name
             nameTextField.isHidden = true
@@ -47,6 +49,7 @@ class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelega
                 imageView.isHidden = false
             }
             navigationItem.rightBarButtonItems = [shareItem, deleteItem]
+            navigationItem.leftBarButtonItem = backItem
         } else {
             title = NSLocalizedString("new_meme", comment: "")
             navigationItem.leftBarButtonItem = leftItem
@@ -68,7 +71,7 @@ class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func save() {
         if nameTextField.text!.isEmpty {
-            showAlertDialog(message: "Por favor, introduce el nombre del meme.", title: "Error", controller: self)
+            showAlertDialog(message: NSLocalizedString("empty_name", comment: ""), title: "Error", controller: self)
             return
         }
         delegate?.memeDetailsDidSave(memeDetailsViewController: self)
@@ -83,7 +86,11 @@ class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func deleteMeme() {
         guard let meme = self.meme else { return }
-        delegate?.memeDetailsDidDelete(meme: meme)
+        delegate?.memeDetailsDidDelete(controller: self, meme: meme)
+    }
+    
+    @objc func back() {
+        dismiss(animated: true, completion: nil)
     }
 
 }
