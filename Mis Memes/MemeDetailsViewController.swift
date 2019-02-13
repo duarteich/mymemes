@@ -61,6 +61,10 @@ class MemeDetailsViewController: UIViewController, UIImagePickerControllerDelega
         MDCAppBarColorThemer.applySemanticColorScheme(ApplicationScheme.shared.colorScheme, to: self.appBar)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @objc func endEditing() {
         nameTextField.resignFirstResponder()
     }

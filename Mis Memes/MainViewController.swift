@@ -78,6 +78,10 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         MDCAppBarColorThemer.applySemanticColorScheme(ApplicationScheme.shared.colorScheme, to: self.appBar)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @objc func endEditing() {
         searchBar.resignFirstResponder()
     }
@@ -103,7 +107,7 @@ class MainViewController: UIViewController, UICollectionViewDelegateFlowLayout, 
         guard let image = memeDetailsViewController.imageView?.image else { return }
         guard let name = memeDetailsViewController.nameTextField.text?.trimmingCharacters(in: .whitespaces) else { return }
         if nameIsUsed(name) {
-            showAlertDialog(message: NSLocalizedString("name_already_exists", comment: ""), title: NSLocalizedString("appname", comment: ""), controller: self)
+            showAlertDialog(message: NSLocalizedString("name_already_exists", comment: ""), title: NSLocalizedString("appname", comment: ""), controller: memeDetailsViewController)
             return
         }
         memeDetailsViewController.dismiss(animated: true, completion: nil)
