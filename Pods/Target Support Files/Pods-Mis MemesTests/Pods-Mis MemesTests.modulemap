@@ -1,6 +1,0 @@
-framework module Pods_Mis_MemesTests {
-  umbrella header "Pods-Mis MemesTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

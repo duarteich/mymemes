@@ -440,7 +440,7 @@ DEPENDENCIES:
   - MaterialComponents
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - MaterialComponents
     - MDFInternationalization
     - MDFTextAccessibility
@@ -456,6 +456,6 @@ SPEC CHECKSUMS:
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
   MotionTransitioning: 23d25edc2f4606efb922403cbac6d81af37aa33a
 
-PODFILE CHECKSUM: 8573e19343f2992c74646989d8d621287ae10027
+PODFILE CHECKSUM: 01ec4955afbeee018b7920dd5394d0b22a66eac1
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.1
